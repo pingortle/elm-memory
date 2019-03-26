@@ -118,7 +118,13 @@ update msg model =
 tileView : Tile -> Html Msg
 tileView tile =
     button
-        [ class "w-16 h-16 border border-color-pink-light rounded-full m-1 p-1 text-5xl hover:bg-pink-light"
+        [ class "w-16 h-16 border border-color-pink-light rounded-full m-1 p-1 text-5xl"
+        , case tile.status of
+            Matched ->
+                class "bg-green-lighter"
+
+            _ ->
+                class "hover:bg-pink-lighter"
         , onClick
             (case tile.status of
                 NotSelected ->
