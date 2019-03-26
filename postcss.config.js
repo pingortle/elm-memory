@@ -13,6 +13,6 @@ module.exports = {
         'nesting-rules': true
       }
     }),
-    require('@fullhuman/postcss-purgecss')({ content: ['**/*.{elm,pug}'], extractors: [{ extractor: TailwindExtractor, extensions: ['elm', 'pug'] }] })
-  ]
+    process.env.NODE_ENV == 'production' ? require('@fullhuman/postcss-purgecss')({ content: ['**/*.{elm,pug}'], extractors: [{ extractor: TailwindExtractor, extensions: ['elm', 'pug'] }] }) : null
+  ].filter(plugin => plugin)
 }
