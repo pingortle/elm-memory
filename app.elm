@@ -2,6 +2,7 @@ module Main exposing (Msg(..), main, update, view)
 
 import Browser
 import Html exposing (Html, button, div, text)
+import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import List exposing (concat, concatMap, filter, indexedMap, length, map, range, repeat)
 import Random exposing (Seed, generate)
@@ -39,7 +40,7 @@ init _ =
     , shuffleBoard
         (indexedMap
             (\index group -> { status = NotSelected, key = index, group = group })
-            (concat (repeat 2 (range 0 4)))
+            (concat (repeat 2 (range 0 9)))
         )
     )
 
@@ -117,7 +118,8 @@ update msg model =
 tileView : Tile -> Html Msg
 tileView tile =
     button
-        [ onClick
+        [ class "w-16 h-16 border border-color-pink-light rounded-full m-1 p-1 text-5xl hover:bg-pink-light"
+        , onClick
             (case tile.status of
                 NotSelected ->
                     Select tile
@@ -132,7 +134,7 @@ tileView tile =
         [ text
             (case tile.status of
                 NotSelected ->
-                    "-"
+                    ""
 
                 _ ->
                     String.fromInt tile.group
@@ -142,5 +144,5 @@ tileView tile =
 
 view : Model -> Html Msg
 view model =
-    div []
+    div [ class "container flex items-stretch flex-wrap max-w-xs mx-auto" ]
         (map tileView model)
