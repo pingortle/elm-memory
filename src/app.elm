@@ -3,7 +3,7 @@ module Main exposing (Method(..), main, update, view)
 import Array exposing (Array)
 import Browser
 import Html exposing (Html, button, div, img, text)
-import Html.Attributes exposing (class, src)
+import Html.Attributes exposing (class, hidden, src)
 import Html.Events exposing (onClick)
 import Http
 import Json.Decode as D
@@ -157,29 +157,27 @@ tileView tile =
                     DoNothing
             )
         ]
-        (case tile.status of
-            NotSelected ->
-                []
+        (case tile.image of
+            Just image ->
+                [ img
+                    (concatMap themselves
+                        [ [ class "w-full h-full rounded-full" ]
+                        , case tile.status of
+                            Matched ->
+                                [ class "opacity-75", src image.still ]
 
-            _ ->
-                case tile.image of
-                    Just image ->
-                        [ img
-                            (concatMap themselves
-                                [ [ class "w-full h-full rounded-full" ]
-                                , case tile.status of
-                                    Matched ->
-                                        [ class "opacity-75", src image.still ]
+                            Selected ->
+                                [ src image.animated ]
 
-                                    _ ->
-                                        [ src image.animated ]
-                                ]
-                            )
-                            []
+                            NotSelected ->
+                                [ src image.animated, hidden True ]
                         ]
+                    )
+                    []
+                ]
 
-                    Nothing ->
-                        [ text (String.fromInt tile.key) ]
+            Nothing ->
+                [ text (String.fromInt tile.key) ]
         )
 
 
