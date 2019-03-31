@@ -60,3 +60,12 @@
  * @import "utilities/background-patterns";
  * @import "utilities/skew-transforms";
  */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 20vw);
+  grid-auto-columns: 20vw;
+  grid-auto-rows: 20vw;
+  margin-left: 10vw;
+  margin-right: 10vw;
+}
