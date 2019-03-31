@@ -101,7 +101,7 @@ setStatusFor predicate status =
 
 
 view model =
-    div [ class "container flex items-stretch flex-wrap max-w-xs mx-auto" ]
+    div [ class "container flex items-stretch justify-around flex-wrap max-w-xs mx-auto" ]
         (map tileView model.tiles)
 
 
