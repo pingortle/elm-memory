@@ -141,7 +141,7 @@ tileView tile =
         [ class "border rounded-full m-1 text-5xl"
         , case tile.status of
             Matched ->
-                class "border-green-lightest cursor-default"
+                class "border-green-light bg-green-lightest cursor-default"
 
             Selected ->
                 class "hover:bg-pink-lightest border-pink-light"
