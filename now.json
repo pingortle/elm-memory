@@ -1,5 +1,5 @@
 {
   "version": 2,
   "builds": [{ "src": "package.json", "use": "@now/static-build" }],
-  "alias": ["elm-memory.lape.tech"]
+  "alias": ["elm-memory.lape.tech", "memory-game.lape.tech"]
 }
