@@ -1,8 +1,8 @@
 module Main exposing (Method(..), main, update, view)
 
 import Browser
-import Html exposing (Html, button, div, text)
-import Html.Attributes exposing (class)
+import Html exposing (Html, button, div, img, text)
+import Html.Attributes exposing (class, src)
 import Html.Events exposing (onClick)
 import List exposing (concat, concatMap, filter, indexedMap, length, map, range, repeat)
 import Random
@@ -107,7 +107,7 @@ view model =
 
 tileView tile =
     button
-        [ class "w-16 h-16 border border-color-pink-light rounded-full m-1 p-1 text-5xl"
+        [ class "w-16 h-16 border border-color-pink-light rounded-full m-1 text-5xl"
         , case tile.status of
             Matched ->
                 class "bg-green-lighter"
@@ -126,15 +126,14 @@ tileView tile =
                     DoNothing
             )
         ]
-        [ text
-            (case tile.status of
-                NotSelected ->
-                    ""
+        (case tile.status of
+            NotSelected ->
+                []
 
-                _ ->
-                    String.fromInt tile.group
-            )
-        ]
+            _ ->
+                [ img [ class "w-full h-full", src "https://media.giphy.com/media/8nbGW1erXutpu/giphy.gif" ] []
+                ]
+        )
 
 
 type Method
