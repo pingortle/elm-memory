@@ -132,18 +132,21 @@ setImages images model =
 
 
 view model =
-    div [ class "container flex items-stretch flex-wrap max-w-xs mx-auto" ]
+    div [ class "grid" ]
         (map tileView model.tiles)
 
 
 tileView tile =
     button
-        [ class "w-16 h-16 border border-color-pink-light rounded-full m-1 text-5xl"
+        [ class "border rounded-full m-1 text-5xl"
         , case tile.status of
             Matched ->
-                class "bg-green-lighter"
+                class "border-green-lightest cursor-default"
 
-            _ ->
+            Selected ->
+                class "hover:bg-pink-lightest border-pink-light"
+
+            NotSelected ->
                 class "hover:bg-pink-lightest"
         , onClick
             (case tile.status of
@@ -161,7 +164,7 @@ tileView tile =
             Just image ->
                 [ img
                     (concatMap themselves
-                        [ [ class "w-full h-full rounded-full" ]
+                        [ [ class "w-full h-full rounded-full hover:opacity-75 object-cover" ]
                         , case tile.status of
                             Matched ->
                                 [ class "opacity-75", src image.still ]
@@ -177,7 +180,7 @@ tileView tile =
                 ]
 
             Nothing ->
-                [ text (String.fromInt tile.key) ]
+                []
         )
 
 
