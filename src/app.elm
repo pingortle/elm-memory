@@ -1,10 +1,13 @@
 module Main exposing (Method(..), main, update, view)
 
+import Array exposing (Array)
 import Browser
 import Html exposing (Html, button, div, img, text)
 import Html.Attributes exposing (class, src)
 import Html.Events exposing (onClick)
-import List exposing (concat, concatMap, filter, indexedMap, length, map, range, repeat)
+import Http
+import Json.Decode as D
+import List exposing (concat, concatMap, filter, indexedMap, length, map, map2, range, repeat)
 import Random
 import Random.List exposing (shuffle)
 import Set exposing (size)
@@ -17,14 +20,30 @@ main =
 init : () -> ( Game, Cmd Method )
 init _ =
     ( Game []
-    , Random.generate SetTiles
-        (shuffle
-            (indexedMap
-                (\index group -> { status = NotSelected, key = index, group = group })
-                (concat (repeat 2 (range 0 9)))
+    , Cmd.batch
+        [ Random.generate SetTiles
+            (shuffle
+                (indexedMap
+                    (\index group -> { status = NotSelected, key = index, group = group, image = Nothing })
+                    (concat (repeat 2 (range 0 9)))
+                )
             )
-        )
+        , Http.get
+            { url = "https://api.giphy.com/v1/gifs/search?q=penguin&limit=10&api_key=zzmTEoAr3EIiX7de4FMZGQdF3c8dHfW0"
+            , expect = Http.expectJson GotGifs gifsDecoder
+            }
+        ]
     )
+
+
+gifsDecoder =
+    D.field "data" (D.list gifDecoder)
+
+
+gifDecoder =
+    D.map2 GiphyImage
+        (D.field "images" (D.field "original" (D.field "url" D.string)))
+        (D.field "images" (D.field "original_still" (D.field "url" D.string)))
 
 
 update msg model =
@@ -34,6 +53,14 @@ update msg model =
 
         SetTiles tiles ->
             ( Game tiles, Cmd.none )
+
+        GotGifs result ->
+            case result of
+                Ok data ->
+                    ( setImages (Array.fromList data) model, Cmd.none )
+
+                Err _ ->
+                    ( setImages Array.empty model, Cmd.none )
 
         Guess guess ->
             ( checkGuess guess model, Cmd.none )
@@ -100,6 +127,10 @@ setStatusFor predicate status =
             tile
 
 
+setImages images model =
+    { model | tiles = map (\tile -> { tile | image = Array.get tile.group images }) model.tiles }
+
+
 view model =
     div [ class "container flex items-stretch flex-wrap max-w-xs mx-auto" ]
         (map tileView model.tiles)
@@ -131,8 +162,24 @@ tileView tile =
                 []
 
             _ ->
-                [ img [ class "w-full h-full", src "https://media.giphy.com/media/8nbGW1erXutpu/giphy.gif" ] []
-                ]
+                case tile.image of
+                    Just image ->
+                        [ img
+                            (concatMap themselves
+                                [ [ class "w-full h-full rounded-full" ]
+                                , case tile.status of
+                                    Matched ->
+                                        [ class "opacity-75", src image.still ]
+
+                                    _ ->
+                                        [ src image.animated ]
+                                ]
+                            )
+                            []
+                        ]
+
+                    Nothing ->
+                        [ text (String.fromInt tile.key) ]
         )
 
 
@@ -140,6 +187,7 @@ type Method
     = DoNothing
     | Guess Tile
     | SetTiles (List Tile)
+    | GotGifs (Result Http.Error (List GiphyImage))
 
 
 type alias Game =
@@ -147,7 +195,11 @@ type alias Game =
 
 
 type alias Tile =
-    { status : Selection, key : Int, group : Int }
+    { status : Selection, key : Int, group : Int, image : Maybe GiphyImage }
+
+
+type alias GiphyImage =
+    { animated : String, still : String }
 
 
 type Selection
