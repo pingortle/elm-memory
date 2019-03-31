@@ -144,7 +144,7 @@ tileView tile =
                 class "bg-green-lighter"
 
             _ ->
-                class "hover:bg-pink-lighter"
+                class "hover:bg-pink-lightest"
         , onClick
             (case tile.status of
                 NotSelected ->
