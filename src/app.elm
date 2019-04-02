@@ -132,7 +132,7 @@ setImages images model =
 
 
 view model =
-    div [ class "grid" ]
+    div [ class "grid mt-8" ]
         (map tileView model.tiles)
 
 
