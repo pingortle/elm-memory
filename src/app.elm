@@ -29,7 +29,7 @@ init _ =
                 )
             )
         , Http.get
-            { url = "https://api.giphy.com/v1/stickers/search?q=parrot&limit=10&api_key=zzmTEoAr3EIiX7de4FMZGQdF3c8dHfW0"
+            { url = "https://api.giphy.com/v1/stickers/search?q=fruit&limit=10&api_key=zzmTEoAr3EIiX7de4FMZGQdF3c8dHfW0"
             , expect = Http.expectJson GotGifs gifsDecoder
             }
         ]
