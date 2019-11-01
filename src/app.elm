@@ -29,7 +29,7 @@ init _ =
                 )
             )
         , Http.get
-            { url = "https://api.giphy.com/v1/gifs/search?q=penguin&limit=10&api_key=zzmTEoAr3EIiX7de4FMZGQdF3c8dHfW0"
+            { url = "https://api.giphy.com/v1/stickers/search?q=easter&limit=10&api_key=zzmTEoAr3EIiX7de4FMZGQdF3c8dHfW0"
             , expect = Http.expectJson GotGifs gifsDecoder
             }
         ]
@@ -132,7 +132,7 @@ setImages images model =
 
 
 view model =
-    div [ class "grid" ]
+    div [ class "grid mt-6" ]
         (map tileView model.tiles)
 
 
@@ -141,7 +141,7 @@ tileView tile =
         [ class "border rounded-full m-1 text-5xl"
         , case tile.status of
             Matched ->
-                class "border-green-lightest cursor-default"
+                class "border-green-light bg-green-lightest cursor-default"
 
             Selected ->
                 class "hover:bg-pink-lightest border-pink-light"
