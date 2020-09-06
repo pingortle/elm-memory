@@ -14,7 +14,7 @@ import Set exposing (size)
 
 
 main =
-    Browser.element { init = init, update = update, view = view, subscriptions = \_ -> Sub.none }
+    Browser.document { init = init, update = update, view = view, subscriptions = \_ -> Sub.none }
 
 
 init : () -> ( Game, Cmd Method )
@@ -132,8 +132,9 @@ setImages images model =
 
 
 view model =
-    div [ class "grid" ]
-        (map tileView model.tiles)
+    { title = "Memory Game"
+    , body = [ div [ class "grid" ] (map tileView model.tiles) ]
+    }
 
 
 tileView tile =
